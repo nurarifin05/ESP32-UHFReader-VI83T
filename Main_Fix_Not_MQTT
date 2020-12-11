@@ -1,0 +1,54 @@
+#include "Arduino.h"
+#define RXD2 16
+#define TXD2 17
+
+
+unsigned char incomingByte;
+int a;
+String nol = "0";
+String karakter;
+int Panjang;
+String Data;
+String Str1;
+String hasil;
+String stringOne;
+String stringTwo;
+
+void setup ()
+{
+  Serial.begin (115200);
+  Serial2.begin(115200, SERIAL_8N1, RXD2, TXD2);
+  Serial2.println("serial2test");
+  Serial.println ("begin initial Serial!\n");
+}
+
+void loop ()
+{
+//  sendIdentifyCmd ();
+  delay (1);
+  
+  while(Serial2.available () > 0)
+  {
+      incomingByte=Serial2.read ();
+      karakter = String(incomingByte, HEX);
+      Panjang = karakter.length();
+      if(Panjang == 1){
+        Str1 = "0" + karakter;
+      }else{
+      Str1 = karakter;
+      }
+      hasil = hasil + Str1;
+      
+     stringOne = hasil;
+      stringOne.replace("20", "");
+      stringOne.replace("0d0a", "");
+      stringOne.replace("30303030312c30312c30342c", "");
+       Data = stringOne;
+  } 
+
+  if(hasil != ""){
+    Serial.println(Data);
+    hasil="";      
+  }
+  delay (1000);
+}
